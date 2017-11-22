@@ -1,13 +1,11 @@
-module Main exposing (..)
-
 import Dict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Html.App as App
-import Markdown
+-- import Markdown
 import Set exposing (..)
 import String exposing (..)
+import Tuple exposing (..)
 
 -- TODO: Block non-numbers from being entered as scores
 -- Seal Team Six/The Dream Team/The A-Team/Team America World Police/Double Team
@@ -251,8 +249,8 @@ deleteButtonStyle =
 displayRow : Dict Int String -> ( Int, List String ) -> Html Msg
 displayRow ranks indexedEntry =
   let
-    idx = fst indexedEntry
-    entry = snd indexedEntry
+    idx = first indexedEntry
+    entry = second indexedEntry
     resultTdStyle = if (rem idx 2) == 0 then
                       resultsTdStyleZero
                     else
@@ -292,7 +290,7 @@ makeRankDict teamsAndScores =
   |> List.sort
   |> List.reverse
   |> List.indexedMap (,)
-  |> List.map (\e -> (snd e, (toString ((fst e) + 1))))
+  |> List.map (\e -> (second e, (toString ((first e) + 1))))
   |> Dict.fromList
 
 
@@ -329,7 +327,7 @@ view model =
         tr [] [
           td [ controlTdStyle ]
           [
-        --[ button [ Html.Attributes.type' "button"
+        --[ button [ Html.Attributes.type_ "button"
         --         , onClick ToggleInstructions
         --         , Html.Attributes.style addButtonStyle
         --         ]
@@ -338,7 +336,7 @@ view model =
         , hr [] []
         , input [ placeholder "Enter team name", onInput EnterTeamName ] []
         , br [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick AddTeam
                  , Html.Attributes.style addButtonStyle
                  ]
@@ -350,31 +348,31 @@ view model =
         , br [] []
         , input [ placeholder "Edit / Add score", onInput UpdateScoreString ] []
         , br [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick EnterAddScore
                  , Html.Attributes.style addButtonStyle
                  ]
                  [ Html.text "Add score" ]
         , br [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick EnterEditScore
                  , Html.Attributes.style deleteButtonStyle
                  ]
                  [ Html.text "Edit all scores" ]
         , br [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick DeleteTeam
                  , Html.Attributes.style deleteButtonStyle
                  ]
                  [ Html.text "Remove Team" ]
         , hr [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick SortByTotalScore
                  , Html.Attributes.style sortButtonStyle
                  ]
                  [ Html.text "Sort by total score" ]
         , br [] []
-        , button [ Html.Attributes.type' "button"
+        , button [ Html.Attributes.type_ "button"
                  , onClick SortByTeamName
                  , Html.Attributes.style sortButtonStyle
                  ]
@@ -394,9 +392,9 @@ view model =
     ]
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
-    App.beginnerProgram
+    Html.beginnerProgram
         { model = initModel
         , update = update
         , view = view
